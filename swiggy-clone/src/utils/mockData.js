@@ -1886,4 +1886,4 @@ const resList = [
     },
   ];
 
-  export default resList;
+  export {resList};
