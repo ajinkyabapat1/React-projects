@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 const Body = () => {
   const [listOfRestaurants, setRestList] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const filterRestaurant = () => {
-    const filterRestauntList = listOfRestaurants.filter((val) => val.info.avgRating > 4);
+    const filterRestauntList = listOfRestaurants.filter(
+      (val) => val.info.avgRating > 4
+    );
     setRestList(filterRestauntList);
   };
 
@@ -17,16 +20,37 @@ const Body = () => {
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.5204303&lng=73.8567437&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
-   
-    setRestList(json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
+
+    setRestList(
+      json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
   };
-  if(listOfRestaurants.length==0){
-   return  <Shimmer/>
-   
+  if (listOfRestaurants.length == 0) {
+    return <Shimmer />;
   }
-  return (
+  return listOfRestaurants.length == 0 ? (
+    <Shimmer />
+  ) : (
     <div className="body">
       <div className="filter">
+        <div className="search">
+          <input
+            type="text"
+            className="search-box"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              const filteredRestaurant = listOfRestaurants.filter(
+                (data) => data.info.name.toLowerCase().includes(searchText.toLowerCase())
+              );
+              setRestList(filteredRestaurant)
+            }}
+          >
+            Find Restaurant
+          </button>
+        </div>
         <button className="filter-btn" onClick={filterRestaurant}>
           Top Rated Restaurant
         </button>
