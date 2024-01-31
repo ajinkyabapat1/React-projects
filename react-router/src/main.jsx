@@ -1,54 +1,52 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-import Layout from './Layout.jsx'
-import Home from './components/Home/Home.jsx'
-import About from './components/About/About.jsx'
- import Contact from './components/Contatct/Contact.jsx'
-import User from './components/User/User.jsx'
-import { githubInfoLoader } from './components/Github/Github.jsx'
-import Github from './components/Github/Github.jsx'
-// const router = createBrowserRouter([
-//   {
-//     path: '/',
-//     element: <Layout/>,
-//     children: [
-//       {
-//         path: "",
-//         element: <Home />
-//       },
-//       {
-//         path: "about",
-//         element: <About />
-//       },
-//       {
-//         path: "contact",
-//         element: <Contact />
-//       }
-//     ]
-//   }
-// ])
+import React, { useReducer } from 'react';
+import './style.css';
+const initialTodos = [
+  {
+    id: 1,
+    title: 'Todo 1',
+    complete: false,
+  },
+  {
+    id: 2,
+    title: 'Todo 2',
+    complete: false,
+  },
+];
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path='/' element={<Layout />}>
-      <Route path='' element={<Home />} />
-      <Route path='about' element={<About />} />
-      <Route path='contact' element={<Contact />} />
-      <Route path='user/:userid' element={<User />} />
-      <Route 
-      loader={githubInfoLoader}
-      path='github' 
-      element={<Github />}
-       />
-    </Route>
-  )
-)
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'complete':
+      return state.map((todos) => {
+        if (todos.id === action.id) {
+          return { ...todos, complete: !todos.complete };
+        } else {
+          return todo;
+        }
+      });
+    default:
+      return state;
+  }
+};
+export default function App() {
+  const [todos, dispatch] = useReducer(reducer, initialTodos);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+  const handleComplete = (todos) => {
+    dispatch({ id: todos.id, type: 'complete' });
+  };
+  return (
+    <>
+      {todos.map((todo) => (
+        <div key={todo.id}>
+          <label>
+            <input
+              type="checkbox"
+              checked={todo.complete}
+              onChange={() => handleComplete(todo)}
+            />
+            {todo.title}
+          </label>
+        </div>
+      ))}
+    </>
+  );
+}
