@@ -2,6 +2,7 @@ import RestaurantCard from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus.JS";
 const Body = () => {
   const [listOfRestaurants, setRestList] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
@@ -22,7 +23,11 @@ const Body = () => {
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.5204303&lng=73.8567437&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
-console.log("data",json,json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
+    console.log(
+      "data",
+      json,
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
     setRestList(
       json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
     );
@@ -30,7 +35,11 @@ console.log("data",json,json?.data?.cards[4]?.card?.card?.gridElements?.infoWith
       json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
     );
   };
-console.log(filteredRestaurants)
+
+  const onlineStatus = useOnlineStatus();
+  if (!onlineStatus) {
+    return <h1>Looks like you are offline please check network</h1>;
+  }
   return filteredRestaurants.length == 0 ? (
     <Shimmer />
   ) : (
@@ -61,7 +70,10 @@ console.log(filteredRestaurants)
       </div>
       <div className="res-container">
         {filteredRestaurants.map((restaurant) => (
-         <Link to={"restaurant/"+restaurant?.info?.id}> <RestaurantCard key={restaurant?.info?.id} resData={restaurant} /></Link>
+          <Link to={"restaurant/" + restaurant?.info?.id}>
+            {" "}
+            <RestaurantCard key={restaurant?.info?.id} resData={restaurant} />
+          </Link>
         ))}
       </div>
     </div>
