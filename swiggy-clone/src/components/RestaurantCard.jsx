@@ -22,6 +22,7 @@ const RestaurantCard = (props) => {
           src={
             `${CDN_URL}` +
             cloudinaryImageId
+            
           }
         />
         <h3>{name}</h3>
