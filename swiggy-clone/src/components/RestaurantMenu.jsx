@@ -23,14 +23,20 @@ function RestaurantMenu(props) {
   return resInfo == null ? (
     <Shimmer />
   ) : (
-    <div className="menu">
-      <h1>{resInfo.cards[2].card.card.info.name}</h1>
-      <h2>Menu</h2>
-      <ul>
+    <div className=" flex  max-w-sm rounded  shadow-lg m-4 p-4">
+      <div>
+      <h1 className="flex" >{resInfo.cards[2].card.card.info.name}</h1>
+      </div>
+      
+      <div>
+      <h2 >Menu</h2>
+      </div>
+     
+      <ul className="flex-col">
         {resInfo.cards[4].groupedCard.cardGroupMap.REGULAR.cards[2].card.card.itemCards.map(
           (data, i) => (
         
-            <li key={i}>{data?.card?.info?.name +" -Rs."+Math.abs(+data?.card?.info?.price/100)
+            <li className="p-4 "key={i}>{data?.card?.info?.name +" -Rs."+Math.abs(+data?.card?.info?.price/100)
               
             }</li>
           )
