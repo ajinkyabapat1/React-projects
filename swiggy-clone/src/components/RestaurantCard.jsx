@@ -33,7 +33,7 @@ const RestaurantCard = (props) => {
 
 export const isPromoted = (RestaurantCard) => {
   return (props) => {
-    console.log("????????",props)
+  
     return (
       <>
         <label className="absolute p-2 rounded-lg bg-black text-white font-normal"> Accepting orders 🟢</label>
