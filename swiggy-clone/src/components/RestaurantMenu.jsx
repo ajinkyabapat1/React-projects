@@ -7,6 +7,7 @@ import RestaurantCategory from "./RestaurantCategory";
 
 function RestaurantMenu(props) {
   const [resInfo, setResInfo] = useState(null);
+  const [showIndex, setShowIndex] = useState(0);
   const { resId } = useParams();
   //const resInfo = useRestaurantMenu(resId);
   useEffect(() => {
@@ -26,19 +27,28 @@ function RestaurantMenu(props) {
         c.card?.card?.["@type"] ==
         "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
     );
-  console.log(">>catego", categories);
+
   return resInfo == null ? (
     <Shimmer />
   ) : (
     <div className="text-center">
-      <h1 className="font-bold my-6 text-xl">{resInfo.cards[2].card.card.info.name}</h1>
-      <p className="font-medium "> {resInfo.cards[2].card.card.info.cuisines.join(",")} - {resInfo.cards[2].card.card.info.costForTwoMessage}</p>
-      {
-        categories.map((data,i)=>{
-         return  <RestaurantCategory data={data.card.card}/>
-        })
-      }
-      
+      <h1 className="font-bold my-6 text-xl">
+        {resInfo.cards[2].card.card.info.name}
+      </h1>
+      <p className="font-medium ">
+        {" "}
+        {resInfo.cards[2].card.card.info.cuisines.join(",")} -{" "}
+        {resInfo.cards[2].card.card.info.costForTwoMessage}
+      </p>
+      {categories.map((data, index) => {
+        return (
+          <RestaurantCategory
+            data={data.card.card}
+            showItems={index == showIndex ? true : false}
+            setShowIndex={()=>setShowIndex(index)}
+          />
+        );
+      })}
     </div>
   );
 }
