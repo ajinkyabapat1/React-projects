@@ -1,12 +1,14 @@
 import RestaurantCard, { isPromoted } from "./RestaurantCard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus.JS";
+import UserContext from "../utils/UserContext";
 const Body = () => {
   const [listOfRestaurants, setRestList] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const {setUserName,loggedInUser}=useContext(UserContext)
   const filterRestaurant = () => {
     const filterRestauntList = listOfRestaurants.filter(
       (val) => val.info.avgRating > 4
@@ -16,7 +18,7 @@ const Body = () => {
   const RestaurantCardPromoted = isPromoted(RestaurantCard);
   useEffect(() => {
     fetchData();
-  }, []);
+  }, []); 
 
   const fetchData = async () => {
     const data = await fetch(
@@ -70,6 +72,12 @@ const Body = () => {
           >
             Top Rated Restaurant
           </button>
+          User Name &nbsp;<input
+            type="text"
+            className=" search-box  border border-solid border-black w-50 h-10"
+            value={loggedInUser}
+            onChange={(e) => setUserName(e.target.value)}
+          />
         </div>
       </div>
       <div className="flex flex-wrap">
