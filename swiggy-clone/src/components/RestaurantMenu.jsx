@@ -43,6 +43,7 @@ function RestaurantMenu(props) {
       {categories.map((data, index) => {
         return (
           <RestaurantCategory
+            key={data?.card?.card.title}
             data={data.card.card}
             showItems={index == showIndex ? true : false}
             setShowIndex={()=>setShowIndex(index)}
