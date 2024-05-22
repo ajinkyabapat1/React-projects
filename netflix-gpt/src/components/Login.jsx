@@ -8,13 +8,11 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/fireBase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../state-management/userSlice";
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const email = useRef(null);
   const fullName = useRef(null);
@@ -50,7 +48,7 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              navigate("/browse");
+              //navigate("/browse");
             })
             .catch((error) => {
               // An error occurred
@@ -61,7 +59,6 @@ const Login = () => {
         
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessage(errorMessage);
           // ..
@@ -78,11 +75,10 @@ const Login = () => {
           console.log(user);
 
           console.log("sign in", user);
-          navigate("/browse")
+          //navigate("/browse")
           // ...
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessage(errorMessage);
 

@@ -1,14 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LOGO, USER_AVATAR } from "../utils/constants";
 import { auth } from "../utils/fireBase";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import { addUser, removeUser } from "../state-management/userSlice";
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 const Header = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((store) => store.user);
-  console.log(currentUser);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(
+          addUser({
+            uid: uid,
+            email: email,
+            displayName: displayName,
+            photoURL: photoURL,
+          })
+        );
+        
+        navigate("/browse");
+      } else {
+        dispatch(removeUser());
+        navigate("/");
+        
+      }
+    });
+  }, []);
   const onSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -29,7 +51,7 @@ const Header = () => {
             alt="user icon"
           />
           <button className="text-white font-bold px-2" onClick={onSignOut}>
-            Sign out
+          <PowerSettingsNewIcon className="text-red-500 font-bold"/>
           </button>
         </div>
       )}
