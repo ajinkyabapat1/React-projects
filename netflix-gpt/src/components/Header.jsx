@@ -11,7 +11,8 @@ const Header = () => {
   const currentUser = useSelector((store) => store.user);
   const dispatch = useDispatch();
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    
+    const unsubscribe=onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(
@@ -30,6 +31,8 @@ const Header = () => {
         
       }
     });
+
+    return (()=>{unsubscribe();})
   }, []);
   const onSignOut = () => {
     signOut(auth)
