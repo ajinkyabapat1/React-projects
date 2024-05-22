@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { BG_URL } from "../utils/constants";
 import { checkValidData } from "../utils/validate";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/fireBase";
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -10,10 +12,41 @@ const Login = () => {
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
+
   const handleButtonClick = () => {
     const message = checkValidData(email.current.value, password.current.value);
     setErrorMessage(message);
-  };
+    if (message) return;
+    if(!isSignInForm){
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        // ...
+
+        console.log("sign up",user)
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage(errorMessage)
+        // ..
+      });
+    }else{
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log("sign in",user)
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    setErrorMessage(errorMessage)
+  });
+    }
+  }
   return (
     <div>
       <Header />
@@ -44,7 +77,7 @@ const Login = () => {
 
         <input
           className=" text-white p-2 my-2 w-full bg-gray-700 rounded-lg"
-          type="text"
+          type="password"
           ref={password}
           placeholder="Enter your password "
         />
@@ -59,7 +92,7 @@ const Login = () => {
           className="py-4 text-white cursor-pointer"
           onClick={toggleSignInForm}
         >
-          {isSignInForm
+          {!isSignInForm
             ? "Already Registered,Sign In now!"
             : "New to Neflix? Sign Up now!"}
         </p>
