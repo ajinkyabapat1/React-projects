@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { LOGO } from "../utils/constants";
+import { LOGO, SUPPORTED_LANGUAGES } from "../utils/constants";
 import { auth } from "../utils/fireBase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -7,10 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser, removeUser } from "../state-management/userSlice";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { toggleGptSearchView } from "../state-management/gptSlice";
+import { changeLanguage } from "../state-management/configSlice";
 const Header = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((store) => store.user);
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -47,6 +50,10 @@ const Header = () => {
   const handleGptSearch = () => {
     dispatch(toggleGptSearchView());
   };
+  
+  const handleLanguageChange = (e) => {
+    dispatch(changeLanguage(e.target.value));
+  };
   useEffect(() => {
     handleGptSearch();
   }, []);
@@ -55,7 +62,18 @@ const Header = () => {
       <img className="w-44 mx-auto md:mx-0" src={LOGO} alt="netflix logo" />
       {currentUser && (
         <div className="flex p-2 justify-between">
-          
+            {showGptSearch && (
+            <select
+              className="p-2 m-2 bg-gray-900 text-white"
+              onChange={handleLanguageChange}
+            >
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <option key={lang.identifier} value={lang.identifier}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          )}
           <button
             className="px-4 py-2 bg-purple-800 font-bold text-white rounded-lg mx-4  hover:bg-purple-950"
             onClick={handleGptSearch}
