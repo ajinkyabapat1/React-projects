@@ -1,1 +1,5 @@
 mega-blog/.env
+
+
+zoom-clone/client/zoom-clone/node_modules
+zoom-clone/server/node_modules
